@@ -2,6 +2,11 @@
   "hash": "fb2de15e",
   "configHash": "418a1ec4",
   "lockfileHash": "283f912b",
+<<<<<<< HEAD
+  "browserHash": "0b1049c5",
+  "optimized": {},
+  "chunks": {}
+=======
   "browserHash": "72b3d4a3",
   "optimized": {
     "react": {
@@ -22,4 +27,5 @@
       "file": "chunk-B2WE2YPZ.js"
     }
   }
+>>>>>>> 22fad0e0407a26775a1a5e454563382f89d79a4f
 }
