@@ -27,10 +27,10 @@ const inventoryController = {
 };
 
 // Inventory routes
-router.get('/', inventoryController.getAll);
-router.get('/:id', inventoryController.getById);
-router.post('/', inventoryController.create);
-router.put('/:id', inventoryController.update);
-router.delete('/:id', inventoryController.delete);
+router.get('/list', inventoryController.getAll);
+router.get('/list/:id', inventoryController.getById);
+router.post('/new/:id', inventoryController.create);
+router.put('/update/:id', inventoryController.update);
+router.delete('/delete/:id', inventoryController.delete);
 
 module.exports = router;
