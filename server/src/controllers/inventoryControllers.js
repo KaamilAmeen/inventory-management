@@ -55,6 +55,7 @@ const updateInventory = async (req, res) => {
   }
 };
 
+
 // 📌 Delete inventory item
 const deleteInventory = async (req, res) => {
   try {
@@ -67,6 +68,8 @@ const deleteInventory = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete inventory item.' });
   }
 };
+// used for gateway to your MySQL database.
+const pool = require('../config/db'); // database connection (MySQL pool)
 
 module.exports = {
   getAllInventory,
@@ -75,4 +78,4 @@ module.exports = {
   updateInventory,
   deleteInventory
 };
-    const pool = require('../config/db'); // database connection (MySQL pool)
+    
