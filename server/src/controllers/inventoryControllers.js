@@ -1,7 +1,4 @@
-const Inventory = require('../models/Inventory');
-
-// Get all inventory items
-exports.getAllInventory = async (req, res) => {
+const getAllInventory = async (req, res) => {
     try {
         const items = await Inventory.find();
         res.json(items);
@@ -10,8 +7,7 @@ exports.getAllInventory = async (req, res) => {
     }
 };
 
-// Get a single inventory item by ID
-exports.getInventoryById = async (req, res) => {
+const getInventoryById = async (req, res) => {
     try {
         const item = await Inventory.findById(req.params.id);
         if (!item) {
@@ -23,8 +19,7 @@ exports.getInventoryById = async (req, res) => {
     }
 };
 
-// Create a new inventory item
-exports.createInventory = async (req, res) => {
+const createInventory = async (req, res) => {
     try {
         const newItem = new Inventory(req.body);
         await newItem.save();
@@ -34,8 +29,7 @@ exports.createInventory = async (req, res) => {
     }
 };
 
-// Update an inventory item
-exports.updateInventory = async (req, res) => {
+const updateInventory = async (req, res) => {
     try {
         const updatedItem = await Inventory.findByIdAndUpdate(
             req.params.id,
@@ -51,8 +45,7 @@ exports.updateInventory = async (req, res) => {
     }
 };
 
-// Delete an inventory item
-exports.deleteInventory = async (req, res) => {
+const deleteInventory = async (req, res) => {
     try {
         const deletedItem = await Inventory.findByIdAndDelete(req.params.id);
         if (!deletedItem) {
@@ -64,4 +57,10 @@ exports.deleteInventory = async (req, res) => {
     }
 };
 
-module.exports = exports;
+module.exports = {
+    getAllInventory,
+    getInventoryById,
+    createInventory,
+    updateInventory,
+    deleteInventory
+};
