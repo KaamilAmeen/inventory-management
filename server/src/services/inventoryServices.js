@@ -17,6 +17,6 @@ async function deleteInventoryItem(id) {
     return await inventoryRepo.deleteInventoryItem(id);
 }
 
-module.export = {
+module.exports = {
     getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem
 };

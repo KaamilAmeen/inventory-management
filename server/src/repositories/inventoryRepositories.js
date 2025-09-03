@@ -72,6 +72,6 @@ async function deleteInventoryItem(id) {
     }
 }
 
-module.export = { 
+module.exports = { 
     getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem  // Export the function
 };
