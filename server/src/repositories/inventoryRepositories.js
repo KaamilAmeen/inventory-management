@@ -3,7 +3,8 @@ const pool = require('../db');
 async function getAllInventoryItems() {
     pool.getConnection(); // Acquire a connection from the pool
     try{
-    const [rows] = await pool.query(""); // Your SQL query here
+    const query = ""; // Your SQL query here
+    const [rows] = await pool.query(query);
     return rows;
     } catch (error) {
         throw error; // Handle error appropriately
@@ -16,7 +17,8 @@ async function getAllInventoryItems() {
 async function addInventoryItems(name, quantity, price) {
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const [result] = await pool.query("", [name, quantity, price]);
+        const query = ""; // Your SQL query here
+        const [result] = await pool.query(query, [name, quantity, price]);
         return result;
     } catch (error) {
         throw error; // Handle error appropriately
@@ -29,7 +31,8 @@ async function addInventoryItems(name, quantity, price) {
 async function updateInventoryItem(id, name, quantity, price) {
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const [result] = await pool.query("", [name, quantity, price, id]);
+        const query = ""; 
+        const [result] = await pool.query(query, [name, quantity, price, id]);
         return result;
     }
     catch (error) { 
@@ -43,7 +46,8 @@ async function updateInventoryItem(id, name, quantity, price) {
 async function getInventoryProducts(id){
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const [rows] = await pool.query("", [id]);
+        const query = ""; // Your SQL query here
+        const [rows] = await pool.query(query, [id]);
         return rows;
     } catch (error) {
         throw error; // Handle error appropriately
