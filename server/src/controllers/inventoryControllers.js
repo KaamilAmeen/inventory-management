@@ -1,10 +1,10 @@
-const pool = require('../config/db'); // database connection (MySQL pool)
+const inventoryService = require('../services/inventoryService');
 
 // 📌 Get all inventory items
 const getAllInventory = async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM inventory ORDER BY id DESC');
-    res.json(rows); // return all rows
+    const data = await inventoryService.getAllInventoryItems();
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch inventory items.' });
   }
@@ -13,7 +13,8 @@ const getAllInventory = async (req, res) => {
 // 📌 Get single inventory item by ID
 const getInventoryById = async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM inventory WHERE id = ?', [req.params.id]);
+    const data = await inventoryService.getInventoryProducts(req.params.id);
+    const { rows } = data;
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
@@ -27,29 +28,30 @@ const getInventoryById = async (req, res) => {
 const createInventory = async (req, res) => {
   try {
     const { name, quantity, location } = req.body;
-    const [result] = await pool.query(
-      'INSERT INTO inventory (name, quantity, location) VALUES (?, ?, ?)',
-      [name, quantity, location]
-    );
-    res.status(201).json({ id: result.insertId, name, quantity, location });
+    if (!name || !quantity || !location) {
+      return res.status(400).json({ error: 'Missing required fields.' });
+    }
+    await inventoryService.addInventoryItems(name, quantity, location);
+    res.status(201).json({ message: 'Inventory item created successfully.' }); 
   } catch (err) {
     res.status(400).json({ error: 'Failed to create inventory item.' });
   }
 };
 
+
 // 📌 Update inventory item
 const updateInventory = async (req, res) => {
   try {
+    const id = req.params.id;
     const { name, quantity, location } = req.body;
-    const [result] = await pool.query(
-      'UPDATE inventory SET name=?, quantity=?, location=? WHERE id=?',
-      [name, quantity, location, req.params.id]
-    );
-
+    if (!name || !quantity || !location) {
+      return res.status(400).json({ error: 'Missing required fields.' });
+    }
+    const result= await inventoryService.updateInventoryItem(id, name, quantity, location);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
-    res.json({ id: req.params.id, name, quantity, location });
+    res.json({ message: 'Inventory item updated successfully.' });
   } catch (err) {
     res.status(400).json({ error: 'Failed to update inventory item.' });
   }
@@ -59,7 +61,8 @@ const updateInventory = async (req, res) => {
 // 📌 Delete inventory item
 const deleteInventory = async (req, res) => {
   try {
-    const [result] = await pool.query('DELETE FROM inventory WHERE id=?', [req.params.id]);
+    const id = req.params.id;
+    const result= await inventoryService.deleteInventoryItem(id);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
@@ -68,8 +71,6 @@ const deleteInventory = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete inventory item.' });
   }
 };
-// used for gateway to your MySQL database.
-const pool = require('../config/db'); // database connection (MySQL pool)
 
 module.exports = {
   getAllInventory,
