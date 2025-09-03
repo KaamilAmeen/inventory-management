@@ -57,6 +57,21 @@ async function getInventoryProducts(id){
     }
 }
 
+async function deleteInventoryItem(id) {
+    pool.getConnection(); // Acquire a connection from the pool
+    try {
+        const query = ""; // Your SQL query here
+        const [result] = await pool.query(query, [id]);
+        return result;
+    }
+    catch (error) {
+        throw error; // Handle error appropriately
+    }
+    finally {
+        pool.releaseConnection(); // Release the connection back to the pool
+    }
+}
+
 module.export = { 
-    getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts// Export the function
+    getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem  // Export the function
 };
