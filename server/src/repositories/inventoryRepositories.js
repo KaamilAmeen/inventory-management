@@ -4,7 +4,7 @@ async function getAllInventoryItems() {
     pool.getConnection(); // Acquire a connection from the pool
     try{
     const query = "CALL Allinventory()"; // Your SQL query here
-    const [rows] = await pool.execute(query);
+    const [rows] = await pool.query(query);
     return rows;
     } catch (error) {
         throw error; // Handle error appropriately
