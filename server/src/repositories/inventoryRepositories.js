@@ -1,10 +1,10 @@
-const pool = require('../db');
+const pool = require('../config/db');
 
 async function getAllInventoryItems() {
     pool.getConnection(); // Acquire a connection from the pool
     try{
-    const query = ""; // Your SQL query here
-    const [rows] = await pool.query(query);
+    const query = "CALL Allinventory()"; // Your SQL query here
+    const [rows] = await pool.execute(query);
     return rows;
     } catch (error) {
         throw error; // Handle error appropriately
