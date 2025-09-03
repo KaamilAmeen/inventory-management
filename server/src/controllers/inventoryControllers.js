@@ -12,7 +12,7 @@ const getAllInventory = async (req, res) => {
 
 // 📌 Get single inventory item by ID
 const getInventoryById = async (req, res) => {
-  try {
+  try { 
     const data = await inventoryService.getInventoryProducts(req.params.id);
     const { rows } = data;
     if (rows.length === 0) {
