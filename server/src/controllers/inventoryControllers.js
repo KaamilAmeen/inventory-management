@@ -16,7 +16,7 @@ const getInventoryById = async (req, res) => {
     const {id} = req.params;
     const data = await inventoryService.getInventoryProducts(id);
     const rows = data[0];
-    if (rows.length === 0) {
+    if (!rows || rows.length === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
     res.json(rows); // return single item
