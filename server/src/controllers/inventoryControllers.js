@@ -14,11 +14,11 @@ const getAllInventory = async (req, res) => {
 const getInventoryById = async (req, res) => {
   try { 
     const data = await inventoryService.getInventoryProducts(req.params.id);
-    const { rows } = data;
-    if (rows.length === 0) {
+    const rows = data[0];
+    if (!rows || rows.length === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
-    res.json(rows[0]); // return single item
+    res.json(rows); // return single item
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch inventory item.' });
   }

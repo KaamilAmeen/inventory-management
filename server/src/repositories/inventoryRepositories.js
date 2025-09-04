@@ -46,7 +46,7 @@ async function updateInventoryItem(id, name, quantity, price) {
 async function getInventoryProducts(id){
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const query = ""; // Your SQL query here
+        const query = "CALL GetInventoryWithProducts(?);"; // Your SQL query here
         const [rows] = await pool.query(query, [id]);
         return rows;
     } catch (error) {
