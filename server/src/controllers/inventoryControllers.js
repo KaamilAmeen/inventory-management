@@ -20,6 +20,7 @@ const getInventoryById = async (req, res) => {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
     res.json(rows); // return single item
+    res.json(rows); // return single item
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch inventory item.' });
   }
