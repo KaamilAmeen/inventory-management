@@ -7,7 +7,7 @@ const inventoryController = require('../controllers/inventoryControllers');
 router.get('/list', inventoryController.getAllInventory);
 router.get('/list/:id', inventoryController.getInventoryById);
 router.post('/new', inventoryController.createInventory);
-router.put('/update/:id', inventoryController.updateInventory);
+router.put('/update/:i_id/:p_id', inventoryController.updateInventory);
 router.delete('/delete/:id', inventoryController.deleteInventory);
 
 module.exports = router;

@@ -28,11 +28,11 @@ async function addInventoryItems(i_id, p_id, Owner_name, Hub_location, Quantity)
     }
 }
 
-async function updateInventoryItem(id, name, quantity, price) {
+async function updateInventoryItem(i_id,p_id,Quantity, Hub_location) {
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const query = ""; 
-        const [result] = await pool.query(query, [name, quantity, price, id]);
+        const query = "CALL UpdateInventory(?,?,?,?);"; 
+        const [result] = await pool.query(query, [i_id,p_id,quantity, hub_location]);
         return result;
     }
     catch (error) { 

@@ -12,8 +12,9 @@ const getAllInventory = async (req, res) => {
 
 // 📌 Get single inventory item by ID
 const getInventoryById = async (req, res) => {
-  try { 
-    const data = await inventoryService.getInventoryProducts(req.params.id);
+  try {
+    const {id} = req.params;
+    const data = await inventoryService.getInventoryProducts(id);
     const rows = data[0];
     if (!rows || rows.length === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
@@ -42,13 +43,14 @@ const createInventory = async (req, res) => {
 // 📌 Update inventory item
 const updateInventory = async (req, res) => {
   try {
-    const id = req.params.id;
-    const { name, quantity, location } = req.body;
-    if (!name || !quantity || !location) {
+    const {i_id,p_id} = req.params;
+    const { quantity, hub_location } = req.body;
+    if (  !Quantity || !Hub_location) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
-    const result= await inventoryService.updateInventoryItem(id, name, quantity, location);
-    if (result.affectedRows === 0) {
+    const result= await inventoryService.updateInventoryItem(i_id,p_id,quantity, hub_location);
+    console.log(result);
+    if (!result || (result.affectedRows !== undefined && result.affectedRows === 0)) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
     res.json({ message: 'Inventory item updated successfully.' });

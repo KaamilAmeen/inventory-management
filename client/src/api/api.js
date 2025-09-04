@@ -7,8 +7,8 @@ const API = axios.create({
 // GET all items
 export const getItems = () => API.get("/items");
 
-// ADD new item
-export const addItem = (item) => API.post("/items", item); 
+// VIEW single inventory item
+const getInventoryById = (id) => API.get(`/list/${id}`);
 
 // UPDATE item
 export const updateItem = (id, item) => API.put(`/items/${id}`, item);
