@@ -1,10 +1,10 @@
-const inventoryService = require('../services/inventoryService');
+const inventoryService = require('../services/inventoryServices');
 
 // 📌 Get all inventory items
 const getAllInventory = async (req, res) => {
   try {
-    const data = await inventoryService.getAllInventoryItems();
-    res.json(data);
+    const rows = await inventoryService.getAllInventoryItems();
+    res.json(rows);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch inventory items.' });
   }

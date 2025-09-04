@@ -1,7 +1,9 @@
 const inventoryRepo =  require('../repositories/inventoryRepositories');
 
 async function getAllInventoryItems() {
-    return await inventoryRepo.getAllInventoryItems();
+    
+    const rows=await inventoryRepo.getAllInventoryItems();
+    return rows[0];
 }
 
 async function addInventoryItems(name, quantity, price) {

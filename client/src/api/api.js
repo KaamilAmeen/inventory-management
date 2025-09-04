@@ -8,7 +8,7 @@ const API = axios.create({
 export const getItems = () => API.get("/items");
 
 // ADD new item
-export const addItem = (item) => API.post("/items", item);
+export const addItem = (item) => API.post("/items", item); 
 
 // UPDATE item
 export const updateItem = (id, item) => API.put(`/items/${id}`, item);
