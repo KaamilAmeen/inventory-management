@@ -46,11 +46,10 @@ const updateInventory = async (req, res) => {
   try {
     const {i_id,p_id} = req.params;
     const { quantity, hub_location } = req.body;
-    if (  !Quantity || !Hub_location) {
+    if (  !quantity || !hub_location) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
     const result= await inventoryService.updateInventoryItem(i_id,p_id,quantity, hub_location);
-    console.log(result);
     if (!result || (result.affectedRows !== undefined && result.affectedRows === 0)) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
