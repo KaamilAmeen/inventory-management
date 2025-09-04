@@ -28,7 +28,7 @@ async function addInventoryItems(i_id, p_id, Owner_name, Hub_location, Quantity)
     }
 }
 
-async function updateInventoryItem(i_id,p_id,Quantity, Hub_location) {
+async function updateInventoryItem(i_id,p_id,quantity, hub_location) {
     pool.getConnection(); // Acquire a connection from the pool
     try {
         const query = "CALL UpdateInventory(?,?,?,?);"; 

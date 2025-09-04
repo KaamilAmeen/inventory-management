@@ -11,10 +11,10 @@ const getInventory = () => API.get("/list");
 const getInventoryById = (id) => API.get(`/list/${id}`);
 
 // ADD new inventory item (with id)
-const addInventory = (id, item) => API.post(`/new/${id}`, item);
+const addInventory = (item) => API.post('/new', item);
 
 // UPDATE inventory item
-const updateInventory = (id, item) => API.put(`/update/${id}`, item);
+const updateInventory = (invId, prodId, item) => API.put(`/update/${invId}/${prodId}`, item);
 
 // DELETE inventory item
 const deleteInventory = (id) => API.delete(`/delete/${id}`);
