@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import inventoryAPI from "../../api/api";
+
 import {
   Table,
   TableBody,
@@ -11,22 +11,6 @@ import {
 import "./Table.css";
 
 export default function TableList({ items, onEdit, onDelete }) {
-  const [form, setForm] = useState([]);
-  useEffect(()=>{
-    inventoryAPI.getInventory().then((response)=>{
-      const formattedData = response.data.map(item => ({
-        id: item.i_id,
-        name: item.Owner_name,
-        quantity: item.Quantity,
-        location: item.Hub_location
-      }));
-      setForm(formattedData);
-    }).catch((error)=>{
-      console.error("Error fetching inventory data:", error);
-    },
-  )
-  })
-  console.log(form);
   return (
     <Table>
       <TableHead>
@@ -38,7 +22,7 @@ export default function TableList({ items, onEdit, onDelete }) {
         </TableRow>
       </TableHead>
       <TableBody>
-        {form.map((item, index) => (
+        {items.map((item, index) => (
           <TableRow key={index}>
             <TableCell>{item.name}</TableCell>
             <TableCell>{item.quantity}</TableCell>

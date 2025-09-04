@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import inventoryAPI from "../../api/api";
 import {
   Card,
   CardContent,
@@ -19,30 +20,44 @@ export default function Inventory({ items, setItems, onViewItem }) {
   const [formOpen, setFormOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [formData, setFormData] = useState({
-    name: "",
-    quantity: "",
-    location: "",
+    invId:1,
+    prodId: 121,
+    name: "Ravi",
+    location: "Delhi Hub",
+    quantity: 1200,
   });
-
+  const [table, setTableData] = useState([]);
+  useEffect(()=>{
+    fetchData()
+  }, [])
+  const fetchData = async () =>{
+    await inventoryAPI.getInventory().then((response)=>{
+      const formattedData = response.data.map(item => ({
+        id: item.i_id,
+        name: item.Owner_name,
+        quantity: item.Quantity,
+        location: item.Hub_location
+      }));
+      setTableData(formattedData);
+    }).catch((error)=>{
+      console.error("Error fetching inventory data:", error);
+    },
+  )
+  }
   // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   // Save data (add or update)
-  const handleSave = () => {
-    if (!formData.name || !formData.quantity || !formData.location) return;
+  const handleSave = async () => {
+    console.log("Form Data to be saved:", formData);
+    await inventoryAPI.addInventory(formData).then((response) => {
+      console.log("Item added/updated:", response.data);
+      fetchData(); // Refresh data after add/update
+    }).catch((error) => {
+      console.error("Error adding/updating item:", error);
+    });
 
-    if (editingIndex !== null) {
-      const updated = [...items];
-      updated[editingIndex] = formData;
-      setItems(updated);
-      setEditingIndex(null);
-    } else {
-      setItems([...items, formData]);
-    }
-
-    setFormData({ name: "", quantity: "", location: "" });
     setFormOpen(false);
   };
 
@@ -68,6 +83,19 @@ export default function Inventory({ items, setItems, onViewItem }) {
         <Card sx={{ maxWidth: 500, margin: "20px auto", padding: 2 }}>
           <CardContent>
             <Stack spacing={2}>
+              <TextField
+                label="Inventory ID"
+                name="id"
+                type="number"
+                value={formData.invId}
+
+              />
+              <TextField
+                label="Product ID"
+                name="prodId"
+                type="number"
+                value={formData.prodId}
+              />
               <TextField
                 label="Name"
                 name="name"
@@ -124,6 +152,7 @@ export default function Inventory({ items, setItems, onViewItem }) {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell><b>Inventory ID</b></TableCell>
                   <TableCell><b>Name</b></TableCell>
                   <TableCell><b>Quantity</b></TableCell>
                   <TableCell><b>Location</b></TableCell>
@@ -131,8 +160,9 @@ export default function Inventory({ items, setItems, onViewItem }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {items.map((item, index) => (
+                {table.map((item, index) => (
                   <TableRow key={index}>
+                    <TableCell>{item.id}</TableCell>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
                     <TableCell>{item.location}</TableCell>
