@@ -14,11 +14,11 @@ async function getAllInventoryItems() {
     }
 }
 
-async function addInventoryItems(name, quantity, price) {
+async function addInventoryItems(i_id, p_id, Owner_name, Hub_location, Quantity) {
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const query = ""; // Your SQL query here
-        const [result] = await pool.query(query, [name, quantity, price]);
+        const query = "CALL InsertInventory(?,?,?,?,?);"; // Your SQL query here
+        const [result] = await pool.query(query, [i_id, p_id, Owner_name, Hub_location, Quantity]);
         return result;
     } catch (error) {
         throw error; // Handle error appropriately

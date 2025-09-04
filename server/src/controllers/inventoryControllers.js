@@ -27,11 +27,11 @@ const getInventoryById = async (req, res) => {
 // 📌 Create new inventory item
 const createInventory = async (req, res) => {
   try {
-    const { name, quantity, location } = req.body;
-    if (!name || !quantity || !location) {
+    const { i_id, p_id, Owner_name, Hub_location, Quantity } = req.body;
+    if (!i_id || !p_id || !Owner_name || !Hub_location || !Quantity) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
-    await inventoryService.addInventoryItems(name, quantity, location);
+    await inventoryService.addInventoryItems(i_id, p_id, Owner_name, Hub_location, Quantity);
     res.status(201).json({ message: 'Inventory item created successfully.' }); 
   } catch (err) {
     res.status(400).json({ error: 'Failed to create inventory item.' });

@@ -6,7 +6,7 @@ const inventoryController = require('../controllers/inventoryControllers');
 // Inventory routes
 router.get('/list', inventoryController.getAllInventory);
 router.get('/list/:id', inventoryController.getInventoryById);
-router.post('/new/:id', inventoryController.createInventory);
+router.post('/new', inventoryController.createInventory);
 router.put('/update/:id', inventoryController.updateInventory);
 router.delete('/delete/:id', inventoryController.deleteInventory);
 
