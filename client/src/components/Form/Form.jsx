@@ -1,35 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { TextField, Button, Box } from "@mui/material";
+import inventoryAPI from "../../api/api";
 import "./Form.css";
 
 export default function Form({ onAdd, editingItem }) {
+  const [invId, setInvId] = useState(0);
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [location, setLocation] = useState("");
-
-  useEffect(() => {
-    if (editingItem) {
-      setName(editingItem.name);
-      setQuantity(editingItem.quantity);
-      setLocation(editingItem.location);
-    }
-  }, [editingItem]);
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !quantity || !location) return;
+    if (!id ||!name || !quantity || !location) return;
 
-    const newItem = { name, quantity, location };
-
-    onAdd(newItem);
-
-    setName("");
-    setQuantity("");
-    setLocation("");
-  };
+    inventoryAPI.addInventory(form).then((response) => {
+      console.log("Item added:", response.data);
+    }).catch((error) => {
+      console.error("Error adding item:", error);
+    });
+      setId(0);
+      setName("");
+      setQuantity("");
+      setLocation("");
+    }
 
   return (
     <Box component="form" onSubmit={handleSubmit} className="form">
+      <TextField
+        label="ID"
+        type="number"
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+        required
+      />
       <TextField
         label="Name"
         value={name}
