@@ -17,7 +17,7 @@ const addInventory = (item) => API.post('/new', item);
 const updateInventory = (invId, prodId, item) => API.put(`/update/${invId}/${prodId}`, item);
 
 // DELETE inventory item
-const deleteInventory = (id) => API.delete(`/delete/${id}`);
+const deleteInventory = (invId, prodId) => API.delete(`/delete/${invId}/${prodId}`);
 
 const getProductDetails = () => API.get('./products')
 
