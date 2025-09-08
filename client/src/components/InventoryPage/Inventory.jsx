@@ -127,24 +127,33 @@ export default function Inventory({ items, setItems, onViewItem }) {
     )
   }
   // Delete item
-  const handleDelete = () => {
-    inventoryAPI.deleteInventory(selectedInvId, selectedProdId).then((response)=>{
+  const handleDelete = (iId, pId) => {
+    axios.delete(`http://localhost:5000/api/inventory/delete/${iId}/${pId}`).then((response)=>{
       console.log("Item Deleted: ", response.data);
     }).catch((error)=>{
       console.log("Error: ", error)
     })
+    // Refresh data after deletion
+    fetchData();
+    // console.log("Deleting ID:", selectedInvId);
+    // console.log("Deleting Prod ID:", selectedProdId);
+    // inventoryAPI.deleteInventory(selectedInvId, selectedProdId).then((response)=>{
+    //   console.log("Item Deleted: ", response.data);
+    // }).catch((error)=>{
+    //   console.log("Error: ", error)
+    // })
   };
 
-  const onClickDataId = (e) =>{
-    const invId = parseInt(e.currentTarget.getAttribute('data-invid'))
-    const prodId = parseInt(e.currentTarget.getAttribute('data-prodid'))
-    setSelectedInvId(invId) 
-    setSelectedProdId(prodId)  
-  }
+  // const onClickDataId = (e) =>{
+  //   const invId = parseInt(e.currentTarget.getAttribute('data-invid'))
+  //   const prodId = parseInt(e.currentTarget.getAttribute('data-prodid'))
+  //   setSelectedInvId(invId) 
+  //   setSelectedProdId(prodId)  
+  // }
 
-  const selectedObj = table.find((_,item)=>item.invId===selectedInvId && item.prodId===selectedProdId)
+  const selectedObj = table.find((_,item)=>item.invId===selectedInvId)
   // console.log(table)
-  // console.log(selectedObj)
+  console.log(selectedObj)
   console.log("Selected inv ID: ", selectedInvId);
   console.log("Selected prod ID: ", selectedProdId)
 
@@ -241,7 +250,7 @@ export default function Inventory({ items, setItems, onViewItem }) {
               </TableHead>
               <TableBody>
                 {table.map((item, index) => (
-                  <TableRow key={index} data-prodid={item.prodId} data-invid={item.invId} onClick={onClickDataId}>
+                  <TableRow key={index} data-prodid={item.prodId} data-invid={item.invId} >
                     <TableCell>{item.invId}</TableCell>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
@@ -267,7 +276,7 @@ export default function Inventory({ items, setItems, onViewItem }) {
                           variant="outlined"
                           color="error"
                           size="small"
-                          onClick={handleDelete}
+                          onClick={handleDelete(item.invId, item.prodId)}
                         >
                           Delete
                         </Button>
