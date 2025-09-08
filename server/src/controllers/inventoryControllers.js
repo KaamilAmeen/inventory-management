@@ -28,6 +28,7 @@ const getInventoryById = async (req, res) => {
 // 📌 Create new inventory item
 const createInventory = async (req, res) => {
   try {
+    console.log(req.body);
     const { i_id, p_id, Owner_name, Hub_location, Quantity } = req.body;
     if (!i_id || !p_id || !Owner_name || !Hub_location || !Quantity) {
       return res.status(400).json({ error: 'Missing required fields.' });
@@ -73,11 +74,21 @@ const deleteInventory = async (req, res) => {
   }
 };
 
+const getProductDetails = async (req, res) =>{
+  try {
+    const rows = await inventoryService.getProductDetails();
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch product details.' });
+  }
+}
+
 module.exports = {
   getAllInventory,
   getInventoryById,
   createInventory,
   updateInventory,
-  deleteInventory
+  deleteInventory,
+  getProductDetails
 };
     

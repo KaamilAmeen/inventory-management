@@ -20,11 +20,11 @@ export default function Inventory({ items, setItems, onViewItem }) {
   const [formOpen, setFormOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [formData, setFormData] = useState({
-    invId:1,
-    prodId: 121,
-    name: "Ravi",
-    location: "Delhi Hub",
-    quantity: 1200,
+    i_id:1,
+    p_id: 121,
+    Owner_name: "Ravi",
+    Hub_location: "Delhi Hub",
+    Quantity: 1200,
   });
   const [table, setTableData] = useState([]);
   useEffect(()=>{
@@ -44,14 +44,14 @@ export default function Inventory({ items, setItems, onViewItem }) {
     },
   )
   }
+  console.log(formData)
   // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   // Save data (add or update)
-  const handleSave = async () => {
-    console.log("Form Data to be saved:", formData);
-    await inventoryAPI.addInventory(formData).then((response) => {
+  const handleSave = () => {
+    inventoryAPI.addInventory(formData).then((response) => {
       console.log("Item added/updated:", response.data);
       fetchData(); // Refresh data after add/update
     }).catch((error) => {
@@ -87,19 +87,19 @@ export default function Inventory({ items, setItems, onViewItem }) {
                 label="Inventory ID"
                 name="id"
                 type="number"
-                value={formData.invId}
+                value={formData.i_id}
 
               />
               <TextField
                 label="Product ID"
                 name="prodId"
                 type="number"
-                value={formData.prodId}
+                value={formData.p_id}
               />
               <TextField
                 label="Name"
                 name="name"
-                value={formData.name}
+                value={formData.Owner_name}
                 onChange={handleChange}
                 required
               />
@@ -107,14 +107,14 @@ export default function Inventory({ items, setItems, onViewItem }) {
                 label="Quantity"
                 name="quantity"
                 type="number"
-                value={formData.quantity}
+                value={formData.Quantity}
                 onChange={handleChange}
                 required
               />
               <TextField
                 label="Location"
                 name="location"
-                value={formData.location}
+                value={formData.Hub_location}
                 onChange={handleChange}
                 required
               />

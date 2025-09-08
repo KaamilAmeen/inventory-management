@@ -72,6 +72,16 @@ async function deleteInventoryItem(id) {
     }
 }
 
+async function getProductDetails() {
+    try {
+        const query = "CALL Allproduct();";
+        const [rows] = await pool.query(query);
+        return rows;
+    } catch (error){
+        throw error;
+    }
+}
+
 module.exports = { 
-    getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem  // Export the function
+    getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem, getProductDetails // Export the function
 };

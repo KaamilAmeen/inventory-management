@@ -19,6 +19,10 @@ async function deleteInventoryItem(id) {
     return await inventoryRepo.deleteInventoryItem(id);
 }
 
+async function getProductDetails() {
+    return await inventoryRepo.getProductDetails();
+}
+
 module.exports = {
-    getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem
+    getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem, getProductDetails
 };
