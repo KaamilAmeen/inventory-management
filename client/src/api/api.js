@@ -1,34 +1,30 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/inventory", // backend will run here
+  baseURL: "http://localhost:5000/api", // backend server
 });
 
-// GET all inventory
-const getInventory = () => API.get("/list");
+// ✅ Inventory APIs
 
-// VIEW single inventory item
-const getInventoryById = (id) => API.get(`/list/${id}`);
+// GET all items
+export const getItems = () => API.get("/inventory");
 
-// ADD new inventory item (with id)
-const addInventory = (item) => API.post('/new', item);
+// GET single item by ID
+export const getItemById = (id) => API.get(`/inventory/${id}`);
 
-// UPDATE inventory item
-const updateInventory = (invId, prodId, item) => API.put(`/update/${invId}/${prodId}`, item);
+// ADD new item
+export const addItem = (item) => API.post("/inventory", item);
 
-// DELETE inventory item
-const deleteInventory = (id) => API.delete(`/delete/${id}`);
+// UPDATE item
+export const updateItem = (id, item) => API.put(`/inventory/${id}`, item);
 
-const getProductDetails = () => API.get('./products')
+// DELETE item
+export const deleteItem = (id) => API.delete(`/inventory/${id}`);
 
-// Export all API functions as a single object
-const inventoryAPI = {
-  getInventory,
-  getInventoryById,
-  addInventory,
-  updateInventory,
-  deleteInventory,
-  getProductDetails
+export default {
+  getItems,
+  getItemById,
+  addItem,
+  updateItem,
+  deleteItem,
 };
-
-export default inventoryAPI;

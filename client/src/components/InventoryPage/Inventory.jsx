@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import inventoryAPI from "../../api/api";
 import {
-  Card,
-  CardContent,
   Typography,
-  TextField,
   Button,
   Table,
   TableBody,
@@ -15,62 +12,48 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
+import Form from "./Form"; // ✅ using Form component
 
-export default function Inventory({ items, setItems, onViewItem }) {
+export default function Inventory({ onViewItem }) {
   const [formOpen, setFormOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [formData, setFormData] = useState({
-    i_id:1,
-    p_id: 121,
-    Owner_name: "Ravi",
-    Hub_location: "Delhi Hub",
-    Quantity: 1200,
-  });
   const [table, setTableData] = useState([]);
-  useEffect(()=>{
-    fetchData()
-  }, [])
-  const fetchData = async () =>{
-    await inventoryAPI.getInventory().then((response)=>{
-      const formattedData = response.data.map(item => ({
+
+  // ✅ fetch data from backend
+  const fetchData = async () => {
+    try {
+      const response = await inventoryAPI.getItems();
+      const formattedData = response.data.map((item) => ({
         id: item.i_id,
         name: item.Owner_name,
         quantity: item.Quantity,
-        location: item.Hub_location
+        location: item.Hub_location,
       }));
       setTableData(formattedData);
-    }).catch((error)=>{
+    } catch (error) {
       console.error("Error fetching inventory data:", error);
-    },
-  )
-  }
-  console.log(formData)
-  // Handle input change
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  // Save data (add or update)
-  const handleSave = () => {
-    inventoryAPI.addInventory(formData).then((response) => {
-      console.log("Item added/updated:", response.data);
-      fetchData(); // Refresh data after add/update
-    }).catch((error) => {
-      console.error("Error adding/updating item:", error);
-    });
-
-    setFormOpen(false);
+    }
   };
 
-  // Edit item
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // ✅ edit item
   const handleEdit = (index) => {
-    setFormData(items[index]);
     setEditingIndex(index);
     setFormOpen(true);
   };
 
-  // Delete item
-  const handleDelete = (index) => {
-    setItems(items.filter((_, i) => i !== index));
+  // ✅ delete item
+  const handleDelete = async (index) => {
+    const id = table[index].id;
+    try {
+      await inventoryAPI.deleteItem(id);
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   return (
@@ -80,64 +63,14 @@ export default function Inventory({ items, setItems, onViewItem }) {
       </Typography>
 
       {formOpen ? (
-        <Card sx={{ maxWidth: 500, margin: "20px auto", padding: 2 }}>
-          <CardContent>
-            <Stack spacing={2}>
-              <TextField
-                label="Inventory ID"
-                name="id"
-                type="number"
-                value={formData.i_id}
-
-              />
-              <TextField
-                label="Product ID"
-                name="prodId"
-                type="number"
-                value={formData.p_id}
-              />
-              <TextField
-                label="Name"
-                name="name"
-                value={formData.Owner_name}
-                onChange={handleChange}
-                required
-              />
-              <TextField
-                label="Quantity"
-                name="quantity"
-                type="number"
-                value={formData.Quantity}
-                onChange={handleChange}
-                required
-              />
-              <TextField
-                label="Location"
-                name="location"
-                value={formData.Hub_location}
-                onChange={handleChange}
-                required
-              />
-
-              <Stack direction="row" spacing={2}>
-                <Button variant="contained" onClick={handleSave}>
-                  {editingIndex !== null ? "Update" : "Add"}
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => {
-                    setFormOpen(false);
-                    setEditingIndex(null);
-                    setFormData({ name: "", quantity: "", location: "" });
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
+        <Form
+          editingItem={editingIndex !== null ? table[editingIndex] : null}
+          onAdd={() => {
+            fetchData();
+            setFormOpen(false);
+            setEditingIndex(null);
+          }}
+        />
       ) : (
         <>
           <Button
