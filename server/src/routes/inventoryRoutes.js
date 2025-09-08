@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 
+<<<<<<< HEAD
 // GET all inventory items
 router.get("/", async (req, res) => {
   try {
@@ -11,6 +12,14 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+=======
+// Inventory routes
+router.get('/list', inventoryController.getAllInventory);
+router.get('/list/:id', inventoryController.getInventoryById);
+router.post('/new', inventoryController.createInventory);
+router.put('/update/:i_id/:p_id', inventoryController.updateInventory);
+router.delete('/delete/:i_id/:p_id', inventoryController.deleteInventory);
+>>>>>>> db4ec8a64344d441751c3e8d44cac18321a5bcdd
 
 // GET item by ID
 router.get("/:id", async (req, res) => {
