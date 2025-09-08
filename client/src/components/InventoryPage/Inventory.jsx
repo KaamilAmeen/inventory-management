@@ -15,16 +15,18 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
+import axios from "axios";
 
 export default function Inventory({ items, setItems, onViewItem }) {
   const [formOpen, setFormOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
   const [formData, setFormData] = useState({
-    i_id:1,
-    p_id: 121,
-    Owner_name: "Ravi",
-    Hub_location: "Delhi Hub",
-    Quantity: 1200,
+    i_id: 0,
+    p_id: 0,
+    Owner_name: "",
+    Hub_location: "",
+    Quantity: 0,
   });
   const [table, setTableData] = useState([]);
   useEffect(()=>{
@@ -33,11 +35,13 @@ export default function Inventory({ items, setItems, onViewItem }) {
   const fetchData = async () =>{
     await inventoryAPI.getInventory().then((response)=>{
       const formattedData = response.data.map(item => ({
-        id: item.i_id,
+        invId: item.i_id,
+        prodId: item.p_id,
         name: item.Owner_name,
         quantity: item.Quantity,
         location: item.Hub_location
       }));
+      console.log(formattedData);
       setTableData(formattedData);
     }).catch((error)=>{
       console.error("Error fetching inventory data:", error);
@@ -48,23 +52,47 @@ export default function Inventory({ items, setItems, onViewItem }) {
   // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData)
   };
+  const handleInvIdChange = (e) =>{
+    setFormData({...formData, i_id: parseInt(e.target.value)})
+  }
+  const handleProdIdChange = (e) =>{
+    setFormData({...formData, p_id: parseInt(e.target.value)})
+  }
+  const handleNameChange = (e) =>{
+    setFormData({...formData, Owner_name: e.target.value})
+  }
+  const handleQuantityChange = (e) =>{
+    setFormData({...formData, Quantity: parseInt(e.target.value)})
+  }
+  const handleLocationChange = (e) =>{
+    setFormData({...formData, Hub_location: e.target.value})
+  }
   // Save data (add or update)
-  const handleSave = () => {
-    inventoryAPI.addInventory(formData).then((response) => {
-      console.log("Item added/updated:", response.data);
-      fetchData(); // Refresh data after add/update
-    }).catch((error) => {
-      console.error("Error adding/updating item:", error);
-    });
+  const handleSave = (e) => {
+    e.preventDefault();
+    axios.post('http://localhost:5000/api/inventory/new', formData)
+      .then((response) => {
+        console.log("Item added/updated:", response.data);
+      } ).catch(error =>{
+        console.error("Error adding/updating item: ", error);
+      })
+    // inventoryAPI.addInventory(formData).then((response) => {
+    //   console.log("Item added/updated:", response.data);
+    //   fetchData(); // Refresh data after add/update
+    // }).catch((error) => {
+    //   console.error("Error adding/updating item:", error);
+    // });
 
     setFormOpen(false);
   };
 
   // Edit item
   const handleEdit = (index) => {
-    setFormData(items[index]);
-    setEditingIndex(index);
+    const id = table.prodId;
+    setSelectedId(id)
+    console.log("Editing ID:", selectedId);
     setFormOpen(true);
   };
 
@@ -72,6 +100,12 @@ export default function Inventory({ items, setItems, onViewItem }) {
   const handleDelete = (index) => {
     setItems(items.filter((_, i) => i !== index));
   };
+
+  const onClickDataId = (e) =>{
+    const id = e.currentTarget.getAttribute('data-id')
+    setSelectedId(id) 
+  }
+  console.log("Selected ID:", selectedId);
 
   return (
     <div style={{ padding: "20px" }}>
@@ -88,19 +122,20 @@ export default function Inventory({ items, setItems, onViewItem }) {
                 name="id"
                 type="number"
                 value={formData.i_id}
-
+                onChange={handleInvIdChange}
               />
               <TextField
                 label="Product ID"
                 name="prodId"
                 type="number"
                 value={formData.p_id}
+                onChange={handleProdIdChange}
               />
               <TextField
                 label="Name"
                 name="name"
                 value={formData.Owner_name}
-                onChange={handleChange}
+                onChange={handleNameChange}
                 required
               />
               <TextField
@@ -108,14 +143,14 @@ export default function Inventory({ items, setItems, onViewItem }) {
                 name="quantity"
                 type="number"
                 value={formData.Quantity}
-                onChange={handleChange}
+                onChange={handleQuantityChange}
                 required
               />
               <TextField
                 label="Location"
                 name="location"
                 value={formData.Hub_location}
-                onChange={handleChange}
+                onChange={handleLocationChange}
                 required
               />
 
@@ -161,8 +196,8 @@ export default function Inventory({ items, setItems, onViewItem }) {
               </TableHead>
               <TableBody>
                 {table.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{item.id}</TableCell>
+                  <TableRow key={index} data-id={item.id} onClick={onClickDataId}>
+                    <TableCell>{item.invId}</TableCell>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
                     <TableCell>{item.location}</TableCell>
