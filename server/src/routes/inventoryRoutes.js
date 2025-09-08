@@ -8,6 +8,6 @@ router.get('/list', inventoryController.getAllInventory);
 router.get('/list/:id', inventoryController.getInventoryById);
 router.post('/new', inventoryController.createInventory);
 router.put('/update/:i_id/:p_id', inventoryController.updateInventory);
-router.delete('/delete/:id', inventoryController.deleteInventory);
+router.delete('/delete/:i_id/:p_id', inventoryController.deleteInventory);
 
 module.exports = router;

@@ -15,8 +15,8 @@ async function updateInventoryItem(i_id,p_id,quantity, hub_location) {
 async function getInventoryProducts(id){
     return await inventoryRepo.getInventoryProducts(id);
 }
-async function deleteInventoryItem(id) {
-    return await inventoryRepo.deleteInventoryItem(id);
+async function deleteInventoryItem(i_id,p_id){
+    return await inventoryRepo.deleteInventoryItem(i_id,p_id);
 }
 
 module.exports = {
