@@ -19,6 +19,8 @@ const updateInventory = (invId, prodId, item) => API.put(`/update/${invId}/${pro
 // DELETE inventory item
 const deleteInventory = (id) => API.delete(`/delete/${id}`);
 
+const getProductDetails = () => API.get('./products')
+
 // Export all API functions as a single object
 const inventoryAPI = {
   getInventory,
@@ -26,6 +28,7 @@ const inventoryAPI = {
   addInventory,
   updateInventory,
   deleteInventory,
+  getProductDetails
 };
 
 export default inventoryAPI;

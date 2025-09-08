@@ -1,4 +1,5 @@
-import React from "react";
+import {useState, useEffect} from "react";
+
 import {
   Table,
   TableBody,
@@ -14,10 +15,10 @@ export default function TableList({ items, onEdit, onDelete }) {
     <Table>
       <TableHead>
         <TableRow>
+          <TableCell>Inventory ID</TableCell>
           <TableCell>Name</TableCell>
           <TableCell>Quantity</TableCell>
-          <TableCell>Location</TableCell>
-          <TableCell>Actions</TableCell>
+          <TableCell>Hub Location</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
