@@ -20,6 +20,7 @@ const getInventoryById = async (req, res) => {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
     res.json(rows); // return single item
+    res.json(rows); // return single item
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch inventory item.' });
   }
@@ -63,9 +64,9 @@ const updateInventory = async (req, res) => {
 // 📌 Delete inventory item
 const deleteInventory = async (req, res) => {
   try {
-    const id = req.params.id;
-    const result= await inventoryService.deleteInventoryItem(id);
-    if (result.affectedRows === 0) {
+    const {i_id,p_id} = req.params;
+    const result= await inventoryService.deleteInventoryItem(i_id,p_id);
+    if (!result || (result.affectedRows !== undefined && result.affectedRows === 0)) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
     res.json({ message: 'Inventory item deleted successfully.' });

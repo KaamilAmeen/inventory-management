@@ -57,11 +57,11 @@ async function getInventoryProducts(id){
     }
 }
 
-async function deleteInventoryItem(id) {
+async function deleteInventoryItem(i_id,p_id){
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const query = ""; // Your SQL query here
-        const [result] = await pool.query(query, [id]);
+        const query = "call DeleteInventory(?,?);"; // Your SQL query here
+        const [result] = await pool.query(query, [i_id,p_id]);
         return result;
     }
     catch (error) {
