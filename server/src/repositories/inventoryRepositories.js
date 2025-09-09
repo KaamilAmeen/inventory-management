@@ -28,11 +28,11 @@ async function addInventoryItems(i_id, p_id, Owner_name, Hub_location, Quantity)
     }
 }
 
-async function updateInventoryItem(i_id,p_id,quantity, hub_location) {
+async function updateInventoryItem(i_id,p_id,Owner_name,Quantity, Hub_location) {
     pool.getConnection(); // Acquire a connection from the pool
     try {
-        const query = "CALL UpdateInventory(?,?,?,?);"; 
-        const [result] = await pool.query(query, [i_id,p_id,quantity, hub_location]);
+        const query = "CALL UpdateInventory(?,?,?,?,?);"; 
+        const [result] = await pool.query(query, [i_id,p_id,Owner_name,Quantity, Hub_location]);
         return result;
     }
     catch (error) { 
@@ -43,11 +43,11 @@ async function updateInventoryItem(i_id,p_id,quantity, hub_location) {
     }
 }
 
-async function getInventoryProducts(id){
+async function getInventoryProducts(i_id){
     pool.getConnection(); // Acquire a connection from the pool
     try {
         const query = "CALL GetInventoryWithProducts(?);"; // Your SQL query here
-        const [rows] = await pool.query(query, [id]);
+        const [rows] = await pool.query(query, [i_id]);
         return rows;
     } catch (error) {
         throw error; // Handle error appropriately
