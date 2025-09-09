@@ -194,8 +194,8 @@ export default function Inventory({ items, setItems, onViewItem }) {
   }
   const StaticGrid = () =>{
     return (
-       <TableContainer component={Paper}>
-                    <Table>
+       <TableContainer component={Paper} sx={{ margin: "20px auto", padding: 2 }}>
+                    <Table >
                       <TableHead>
                         <TableRow>
                           <TableCell><b>Owner Name</b></TableCell>
@@ -219,7 +219,7 @@ export default function Inventory({ items, setItems, onViewItem }) {
                         ))}
                       </TableBody>
                     </Table>
-                    <Button variant="contained" color="secondary" onClick={onClickBack}>
+                    <Button variant="contained" color="secondary" onClick={onClickBack} sx={{ mt:"30px"}}>
                       Back
                     </Button>
         </TableContainer>
