@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import inventoryAPI from "../../api/api";
 import {
   Card,
@@ -19,7 +19,7 @@ import axios from "axios";
 
 export default function Inventory({ items, setItems, onViewItem }) {
   const [formOpen, setFormOpen] = useState(false);
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [showStaticGrid, setShowStaticGrid] = useState(false);
   const [selectedInvId, setSelectedInvId] = useState(null);
   const [selectedProdId, setSelectedProdId] = useState(null);
   const [updateOpen, setUpdateOpen ] = useState(null);
@@ -31,6 +31,8 @@ export default function Inventory({ items, setItems, onViewItem }) {
     Quantity: 0,
   });
   const [table, setTableData] = useState([]);
+  const [staticTable, setStaticTable] = useState([]);
+
   useEffect(()=>{
     fetchData()
   }, [])
@@ -43,7 +45,6 @@ export default function Inventory({ items, setItems, onViewItem }) {
         quantity: item.Quantity,
         location: item.Hub_location
       }));
-      console.log(formattedData);
       setTableData(formattedData);
     }).catch((error)=>{
       console.error("Error fetching inventory data:", error);
@@ -82,18 +83,19 @@ export default function Inventory({ items, setItems, onViewItem }) {
   // Save data (add or update)
   const handleSave = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:5000/api/inventory/new', formData)
-      .then((response) => {
-        console.log("Item added/updated:", response.data);
-      } ).catch(error =>{
-        console.error("Error adding/updating item: ", error);
-      })
-    // inventoryAPI.addInventory(formData).then((response) => {
-    //   console.log("Item added/updated:", response.data);
-    //   fetchData(); // Refresh data after add/update
-    // }).catch((error) => {
-    //   console.error("Error adding/updating item:", error);
-    // });
+    // axios.post('http://localhost:5000/api/inventory/new', formData)
+    //   .then((response) => {
+    //     console.log("Item added/updated:", response.data);
+    //   } ).catch(error =>{
+    //     console.error("Error adding/updating item: ", error);
+    //   })
+      fetchData(); // Referesh data
+    inventoryAPI.addInventory(formData).then((response) => {
+      console.log("Item added/updated:", response.data);
+      fetchData(); // Refresh data after add/update
+    }).catch((error) => {
+      console.error("Error adding/updating item:", error);
+    });
     setFormOpen(false);
   };
 
@@ -106,8 +108,19 @@ export default function Inventory({ items, setItems, onViewItem }) {
   }
 
   // Edit item
-  const handleEdit = () => {
-    console.log("Editing ID:", selectedInvId);
+  const handleEdit = (iId, pId) => {
+    console.log(iId)
+    const selectedObj = table.find((item)=>item.invId===iId && item.prodId===pId)
+    const formatToFormData = {
+      i_id: selectedObj.invId,
+      p_id: selectedObj.prodId,
+      Owner_name: selectedObj.name,
+      Hub_location: selectedObj.location,
+      Quantity: selectedObj.quantity,
+    }
+    setSelectedInvId(iId);
+    setSelectedProdId(pId);
+    setFormData(formatToFormData)
     setUpdateOpen(true)
     setFormOpen(true);
   };
@@ -118,6 +131,15 @@ export default function Inventory({ items, setItems, onViewItem }) {
     }).catch((error)=>{
       console.log("Error: ", error)
     })
+    setFormOpen(false);
+    setFormData({
+      i_id: 0,
+      p_id: 0,
+      Owner_name: "",
+      Hub_location: "",
+      Quantity: 0,
+    })
+    fetchData();
   }
   const UpdateButton = () =>{
     return (
@@ -144,6 +166,122 @@ export default function Inventory({ items, setItems, onViewItem }) {
     // })
   };
 
+  const onGetInvById = (iId) =>{
+    inventoryAPI.getInventoryById(iId).then((response)=>{
+      console.log("Inventory item: ", response.data);
+      const formattedData = response.data.map(item => ({
+      invId: item.i_id,
+      prodId: item.p_id,
+      name: item.Owner_name,
+      quantity: item.Quantity,
+      location: item.Hub_location,
+      productName: item.p_name,
+      price: item.price,
+      sales: item.sales
+    }));
+    setStaticTable(formattedData);
+    setShowStaticGrid(true);
+
+    console.log("Static table: ", staticTable)
+
+    }).catch((error)=>{
+      console.log("Error: ", error)
+    })
+  }
+
+  const onClickBack = () =>{
+    setShowStaticGrid(false)
+  }
+  const StaticGrid = () =>{
+    return (
+       <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell><b>Owner Name</b></TableCell>
+                          <TableCell><b>Hub Location</b></TableCell>
+                          <TableCell><b>Quantity</b></TableCell>
+                          <TableCell><b>Product Name</b></TableCell>
+                          <TableCell><b>Price</b></TableCell>
+                          <TableCell><b>Sales</b></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {staticTable.map((item, index) => (
+                          <TableRow key={index} >
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.quantity}</TableCell>
+                            <TableCell>{item.location}</TableCell>
+                            <TableCell>{item.productName}</TableCell>
+                            <TableCell>{item.price}</TableCell>
+                            <TableCell>{item.sales}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <Button variant="contained" color="secondary" onClick={onClickBack}>
+                      Back
+                    </Button>
+        </TableContainer>
+    )
+  }
+
+  const DynamicGrid = () =>{
+    return (
+      <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell><b>Inventory ID</b></TableCell>
+                  <TableCell><b>Name</b></TableCell>
+                  <TableCell><b>Quantity</b></TableCell>
+                  <TableCell><b>Location</b></TableCell>
+                  <TableCell><b>Actions</b></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {table.map((item, index) => (
+                  <TableRow key={index} >
+                    <TableCell>{item.invId}</TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.quantity}</TableCell>
+                    <TableCell>{item.location}</TableCell>
+                    <TableCell>
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => onGetInvById(item.invId)}
+                        >
+                          View
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                          onClick={() => handleEdit(item.invId, item.prodId)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          onClick={() => handleDelete(item.invId, item.prodId)}
+                        >
+                          Delete
+                        </Button>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+    )
+  }
+  // selecting the row from the given table
+
   // const onClickDataId = (e) =>{
   //   const invId = parseInt(e.currentTarget.getAttribute('data-invid'))
   //   const prodId = parseInt(e.currentTarget.getAttribute('data-prodid'))
@@ -151,9 +289,6 @@ export default function Inventory({ items, setItems, onViewItem }) {
   //   setSelectedProdId(prodId)  
   // }
 
-  const selectedObj = table.find((_,item)=>item.invId===selectedInvId)
-  // console.log(table)
-  console.log(selectedObj)
   console.log("Selected inv ID: ", selectedInvId);
   console.log("Selected prod ID: ", selectedProdId)
 
@@ -171,14 +306,14 @@ export default function Inventory({ items, setItems, onViewItem }) {
                 label="Inventory ID"
                 name="id"
                 type="number"
-                value={selectedInvId}
+                value={formData.i_id}
                 onChange={handleInvIdChange}
               />
               <TextField
                 label="Product ID"
                 name="prodId"
                 type="number"
-                value={selectedProdId}
+                value={formData.p_id}
                 onChange={handleProdIdChange}
               />
               <TextField
@@ -211,7 +346,6 @@ export default function Inventory({ items, setItems, onViewItem }) {
                   color="secondary"
                   onClick={() => {
                     setFormOpen(false);
-                    setEditingIndex(null);
                     setFormData({
                       i_id: 0,
                       p_id: 0,
@@ -237,56 +371,8 @@ export default function Inventory({ items, setItems, onViewItem }) {
             Add New
           </Button>
 
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell><b>Inventory ID</b></TableCell>
-                  <TableCell><b>Name</b></TableCell>
-                  <TableCell><b>Quantity</b></TableCell>
-                  <TableCell><b>Location</b></TableCell>
-                  <TableCell><b>Actions</b></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {table.map((item, index) => (
-                  <TableRow key={index} data-prodid={item.prodId} data-invid={item.invId} >
-                    <TableCell>{item.invId}</TableCell>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.quantity}</TableCell>
-                    <TableCell>{item.location}</TableCell>
-                    <TableCell>
-                      <Stack direction="row" spacing={1}>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          onClick={() => onViewItem(item)}
-                        >
-                          View
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          size="small"
-                          onClick={handleEdit}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          onClick={handleDelete(item.invId, item.prodId)}
-                        >
-                          Delete
-                        </Button>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+        {showStaticGrid ? <StaticGrid /> : <DynamicGrid />}
+          
         </>
       )}
     </div>

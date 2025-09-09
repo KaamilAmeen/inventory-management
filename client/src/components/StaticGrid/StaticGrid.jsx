@@ -26,14 +26,31 @@ export default function StaticGrid({ item, onBack }) {
         <Typography variant="h5" gutterBottom>
           Item Details
         </Typography>
-        <div style={{ height: 200, width: "100%", marginBottom: "16px" }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            hideFooter
-            disableSelectionOnClick
-          />
-        </div>
+        <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell><b>Owner Name</b></TableCell>
+                          <TableCell><b>Hub Location</b></TableCell>
+                          <TableCell><b>Quantity</b></TableCell>
+                          <TableCell><b>Product Name</b></TableCell>
+                          <TableCell><b>Price</b></TableCell>
+                          <TableCell><b>Sales</b></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {table.map((item, index) => (
+                          <TableRow key={index} >
+                            <TableCell>{item.invId}</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.quantity}</TableCell>
+                            <TableCell>{item.location}</TableCell>
+
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
         <Button variant="contained" color="secondary" onClick={onBack}>
           Back
         </Button>

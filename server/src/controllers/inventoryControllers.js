@@ -13,13 +13,12 @@ const getAllInventory = async (req, res) => {
 // 📌 Get single inventory item by ID
 const getInventoryById = async (req, res) => {
   try {
-    const {id} = req.params;
-    const data = await inventoryService.getInventoryProducts(id);
+    const {i_id} = req.params;
+    const data = await inventoryService.getInventoryProducts(i_id);
     const rows = data[0];
     if (!rows || rows.length === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
-    res.json(rows); // return single item
     res.json(rows); // return single item
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch inventory item.' });
@@ -46,11 +45,11 @@ const createInventory = async (req, res) => {
 const updateInventory = async (req, res) => {
   try {
     const {i_id,p_id} = req.params;
-    const { quantity, hub_location } = req.body;
-    if (  !quantity || !hub_location) {
+    const {Owner_name, Quantity, Hub_location } = req.body;
+    if ( !Owner_name || !Quantity || !Hub_location) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
-    const result= await inventoryService.updateInventoryItem(i_id,p_id,quantity, hub_location);
+    const result= await inventoryService.updateInventoryItem(i_id,p_id,Owner_name,Quantity, Hub_location);
     if (!result || (result.affectedRows !== undefined && result.affectedRows === 0)) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
