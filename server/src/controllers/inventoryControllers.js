@@ -1,4 +1,7 @@
+const bcrypt = require('bcrypt');
+const { response } = require('express');
 const inventoryService = require('../services/inventoryServices');
+const authMiddleware = require('../middleware/authMiddleware')
 
 // 📌 Get all inventory items
 const getAllInventory = async (req, res) => {
@@ -83,12 +86,35 @@ const getProductDetails = async (req, res) =>{
   }
 }
 
+const addAuthDetails = async (req, res) => {
+  try {
+    const {username ,email ,password,roleId } = req.body;
+    if (!username || !email || !password || !roleId) {
+      return res.status(400).json({error: 'Missing Fields'})
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const userId = await inventoryService.addAuthDetails(username, email,hashedPassword, roleId);
+    const token = authMiddleware.generateToken({userId, username, roleId});
+
+    res.status(201).json({message: 'Details added successfully', token}); 
+  } catch (error) {
+    console.error("Error in addAuthDetails:", error.message, error.stack);
+    res.status(500).json({error: 'Server Error', details: error.message}); 
+  }
+}
+
+const getUserByEmail = async (req, res) =>{
+
+}
+
 module.exports = {
   getAllInventory,
   getInventoryById,
   createInventory,
   updateInventory,
   deleteInventory,
-  getProductDetails
+  getProductDetails,
+  addAuthDetails
 };
     

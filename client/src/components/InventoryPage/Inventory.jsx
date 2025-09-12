@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import inventoryAPI from "../../api/api";
 import {
   Card,
@@ -54,11 +54,13 @@ export default function Inventory({ items, setItems, onViewItem }) {
   console.log(formData)
   // Handle input change
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.
+      name]: e.target.value });
     console.log(formData)
   };
   const handleInvIdChange = (e) =>{
     setFormData({...formData, i_id: parseInt(e.target.value)})
+    console.log(formData)
   }
   const handleProdIdChange = (e) =>{
     setFormData({...formData, p_id: parseInt(e.target.value)})
@@ -86,10 +88,10 @@ export default function Inventory({ items, setItems, onViewItem }) {
     // axios.post('http://localhost:5000/api/inventory/new', formData)
     //   .then((response) => {
     //     console.log("Item added/updated:", response.data);
-    //   } ).catch(error =>{
+    //   } ).catch(3 =>{
     //     console.error("Error adding/updating item: ", error);
     //   })
-      fetchData(); // Referesh data
+
     inventoryAPI.addInventory(formData).then((response) => {
       console.log("Item added/updated:", response.data);
       fetchData(); // Refresh data after add/update
@@ -111,6 +113,7 @@ export default function Inventory({ items, setItems, onViewItem }) {
   const handleEdit = (iId, pId) => {
     console.log(iId)
     const selectedObj = table.find((item)=>item.invId===iId && item.prodId===pId)
+    console.log(selectedObj);
     const formatToFormData = {
       i_id: selectedObj.invId,
       p_id: selectedObj.prodId,
