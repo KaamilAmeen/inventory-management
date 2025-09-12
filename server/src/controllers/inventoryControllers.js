@@ -95,17 +95,12 @@ const addAuthDetails = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userId = await inventoryService.addAuthDetails(username, email,hashedPassword, roleId);
-    const token = authMiddleware.generateToken({userId, username, roleId});
 
-    res.status(201).json({message: 'Details added successfully', token}); 
+    res.status(201).json({message: 'Details added successfully'}); 
   } catch (error) {
     console.error("Error in addAuthDetails:", error.message, error.stack);
     res.status(500).json({error: 'Server Error', details: error.message}); 
   }
-}
-
-const getUserByEmail = async (req, res) =>{
-
 }
 
 module.exports = {
