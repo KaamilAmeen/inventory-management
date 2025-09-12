@@ -27,6 +27,5 @@ async function getProductDetails() {
 
 module.exports = {
     getAllInventoryItems, addInventoryItems, updateInventoryItem, 
-    getInventoryProducts, deleteInventoryItem, getProductDetails, 
-    addAuthDetails, loginUser
+    getInventoryProducts, deleteInventoryItem, getProductDetails
 };
