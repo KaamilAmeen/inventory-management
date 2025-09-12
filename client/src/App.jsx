@@ -1,31 +1,20 @@
 import React, { useState } from "react";
 import Inventory from "./components/InventoryPage/Inventory";
-import StaticGrid from "./components/StaticGrid/StaticGrid";
+import Login from "./components/Login/Login";
+import SignUp from "./components/SignUp/SignUp";
+import LogSignPage from "./components/LogSignPage/LogSignPage";
+import { Route, Routes,  } from "react-router-dom";
+
 
 function App() {
-  const [page, setPage] = useState("inventory");
-  const [items, setItems] = useState([]);          // all items stored here
-  const [selectedItem, setSelectedItem] = useState(null);
-
   return (
     <>
-      {page === "inventory" && (
-        <Inventory
-          items={items}
-          setItems={setItems}
-          onViewItem={(item) => {
-            setSelectedItem(item);
-            setPage("grid");
-          }}
-        />
-      )}
-
-      {page === "grid" && selectedItem && (
-        <StaticGrid
-          item={selectedItem}
-          onBack={() => setPage("inventory")}
-        />
-      )}
+      <Routes>
+        <Route path="/" element={<Inventory />}/>
+        <Route path="/auth" element={<LogSignPage/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/signup" element={<SignUp/>}/>
+      </Routes>
     </>
   );
 }

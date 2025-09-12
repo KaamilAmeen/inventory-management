@@ -10,4 +10,6 @@ router.post('/new', inventoryController.createInventory);
 router.put('/update/:i_id/:p_id', inventoryController.updateInventory);
 router.delete('/delete/:i_id/:p_id', inventoryController.deleteInventory);
 
+router.post('/auth', inventoryController.addAuthDetails)
+
 module.exports = router;

@@ -22,7 +22,14 @@ async function deleteInventoryItem(i_id,p_id){
 async function getProductDetails() {
     return await inventoryRepo.getProductDetails();
 }
-
+async function addAuthDetails(username, email,password, roleId) {
+    return await inventoryRepo.addAuthDetails(username, email,password, roleId);
+}
+async function getUserByEmail(email){
+    return await inventoryRepo.getUserByEmail(email);
+}
 module.exports = {
-    getAllInventoryItems, addInventoryItems, updateInventoryItem, getInventoryProducts, deleteInventoryItem, getProductDetails
+    getAllInventoryItems, addInventoryItems, updateInventoryItem, 
+    getInventoryProducts, deleteInventoryItem, getProductDetails, 
+    addAuthDetails, getUserByEmail
 };
