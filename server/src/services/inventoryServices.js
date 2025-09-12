@@ -1,4 +1,6 @@
 const inventoryRepo =  require('../repositories/inventoryRepositories');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 async function getAllInventoryItems() {
     
@@ -22,14 +24,9 @@ async function deleteInventoryItem(i_id,p_id){
 async function getProductDetails() {
     return await inventoryRepo.getProductDetails();
 }
-async function addAuthDetails(username, email,password, roleId) {
-    return await inventoryRepo.addAuthDetails(username, email,password, roleId);
-}
-async function getUserByEmail(email){
-    return await inventoryRepo.getUserByEmail(email);
-}
+
 module.exports = {
     getAllInventoryItems, addInventoryItems, updateInventoryItem, 
     getInventoryProducts, deleteInventoryItem, getProductDetails, 
-    addAuthDetails, getUserByEmail
+    addAuthDetails, loginUser
 };
