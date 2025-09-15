@@ -21,13 +21,15 @@ DELIMITER //
 CREATE PROCEDURE UpdateInventory(
     IN in_i_id INT,
     IN in_p_id INT,
+    IN new_name VARCHAR(50),
     IN new_quantity INT,
     IN new_location VARCHAR(50)
 )
 BEGIN
     UPDATE inventory
     SET Quantity = new_quantity,
-        Hub_location = new_location
+        Hub_location = new_location,
+        Owner_name = new_name
     WHERE i_id = in_i_id AND p_id = in_p_id;
 END //
 DELIMITER ;

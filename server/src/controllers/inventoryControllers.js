@@ -1,4 +1,8 @@
+const bcrypt = require('bcrypt');
+const { response } = require('express');
 const inventoryService = require('../services/inventoryServices');
+const authService = require('../services/authService');
+const authMiddleware = require('../middleware/authMiddleware')
 
 // 📌 Get all inventory items
 const getAllInventory = async (req, res) => {
@@ -13,8 +17,8 @@ const getAllInventory = async (req, res) => {
 // 📌 Get single inventory item by ID
 const getInventoryById = async (req, res) => {
   try {
-    const {id} = req.params;
-    const data = await inventoryService.getInventoryProducts(id);
+    const {i_id} = req.params;
+    const data = await inventoryService.getInventoryProducts(i_id);
     const rows = data[0];
     if (!rows || rows.length === 0) {
       return res.status(404).json({ error: 'Inventory item not found.' });
@@ -45,11 +49,11 @@ const createInventory = async (req, res) => {
 const updateInventory = async (req, res) => {
   try {
     const {i_id,p_id} = req.params;
-    const { quantity, hub_location } = req.body;
-    if (  !quantity || !hub_location) {
+    const {Owner_name, Quantity, Hub_location } = req.body;
+    if ( !Owner_name || !Quantity || !Hub_location) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
-    const result= await inventoryService.updateInventoryItem(i_id,p_id,quantity, hub_location);
+    const result= await inventoryService.updateInventoryItem(i_id,p_id,Owner_name,Quantity, Hub_location);
     if (!result || (result.affectedRows !== undefined && result.affectedRows === 0)) {
       return res.status(404).json({ error: 'Inventory item not found.' });
     }
@@ -82,12 +86,30 @@ const getProductDetails = async (req, res) =>{
     res.status(500).json({ error: 'Failed to fetch product details.' });
   }
 }
+
+const addAuthDetails = async (req, res) => {
+  try {
+    const {username ,email ,password,roleId } = req.body;
+    if (!username || !email || !password || !roleId) {
+      return res.status(400).json({error: 'Missing Fields'})
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const userId = await authService.addAuthDetails(username, email,hashedPassword, roleId);
+
+    res.status(201).json({message: 'Details added successfully'}); 
+  } catch (error) {
+    console.error("Error in addAuthDetails:", error.message, error.stack);
+    res.status(500).json({error: 'Server Error', details: error.message}); 
+  }
+}
 module.exports = {
   getAllInventory,
   getInventoryById,
   createInventory,
   updateInventory,
   deleteInventory,
-  getProductDetails
+  getProductDetails,
+  addAuthDetails
 };
     
