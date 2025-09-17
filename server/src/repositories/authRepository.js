@@ -17,8 +17,8 @@ async function addAuthDetails(username,email, password, roleId){
 async function getUserByEmail(email){
     try {
         const query = "CALL getUserByEmail(?)";
-        const [rows] = await pool.query(query, [email])
-        return rows;
+        const [rows] = await pool.query(query, [email]);
+        return rows[0];
     } catch(error){
         throw error;
     }

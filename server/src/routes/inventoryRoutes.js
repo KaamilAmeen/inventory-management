@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const inventoryController = require('../controllers/inventoryControllers');
+const authController = require('../controllers/authController');
 
 // Inventory routes
 router.get('/list', inventoryController.getAllInventory);
@@ -11,5 +12,6 @@ router.put('/update/:i_id/:p_id', inventoryController.updateInventory);
 router.delete('/delete/:i_id/:p_id', inventoryController.deleteInventory);
 
 router.post('/auth', inventoryController.addAuthDetails);
+router.post('/login',authController.login);
 
 module.exports = router;

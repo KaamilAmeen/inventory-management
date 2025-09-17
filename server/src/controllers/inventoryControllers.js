@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { response } = require('express');
 const inventoryService = require('../services/inventoryServices');
+const authService = require('../services/authService');
 const authMiddleware = require('../middleware/authMiddleware')
 
 // 📌 Get all inventory items
@@ -94,7 +95,7 @@ const addAuthDetails = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const userId = await inventoryService.addAuthDetails(username, email,hashedPassword, roleId);
+    const userId = await authService.addAuthDetails(username, email,hashedPassword, roleId);
 
     res.status(201).json({message: 'Details added successfully'}); 
   } catch (error) {
@@ -102,7 +103,6 @@ const addAuthDetails = async (req, res) => {
     res.status(500).json({error: 'Server Error', details: error.message}); 
   }
 }
-
 module.exports = {
   getAllInventory,
   getInventoryById,
